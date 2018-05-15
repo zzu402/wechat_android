@@ -61,14 +61,15 @@ public class WebSocketClientImpl extends WebSocketClient {
 			message.obj = s;
 			mHandler.sendMessage(message);
 		}
-		 if (!StringUtil.isBlank(phone) && !StringUtil.isBlank(verifyCode)) {
-	            try {
-	                MqManager.getMq(String.format("VERIFY_FRIEND")).push(GsonUtils.toJson(verifyMap));
-	            } catch (InterruptedException e) {
-	               e.printStackTrace();
-	            }
-	        }
-		
+		if (!StringUtil.isBlank(phone) && !StringUtil.isBlank(verifyCode)) {
+			try {
+				MqManager.getMq(String.format("VERIFY_FRIEND")).push(
+						GsonUtils.toJson(verifyMap));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	@Override
@@ -82,20 +83,6 @@ public class WebSocketClientImpl extends WebSocketClient {
 
 	}
 
-	public static void keepClientAlive(final WebSocketClientImpl client) {
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-					if (client.isClosing()) {
-						client.connect();
-					}
-					SleepUtils.sleep(1000L);
-				}
-			}
-		}).start();
-	}
 
 	public void connect(WebSocketClientImpl client) {
 

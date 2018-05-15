@@ -1,8 +1,6 @@
 package com.hzz.wechat;
 
-import java.net.URISyntaxException;
 import java.util.Map;
-
 import com.hzz.utils.AdbUtils;
 import com.hzz.utils.AutoScript;
 import com.hzz.utils.GsonUtils;
@@ -10,7 +8,6 @@ import com.hzz.utils.OcrUtils;
 import com.hzz.utils.RootShellCmd;
 import com.hzz.websocket.WebSocketClientImpl;
 import com.wechat.queue.MqManager;
-
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
@@ -66,27 +63,30 @@ public class AutoService extends Service {
 					Map<String, Object> verifyMap = GsonUtils.jsonToMap(json);
 					String phone = (String) verifyMap.get("verifyPhone");
 					String verifyCode = (String) verifyMap.get("verifyCode");
-					System.out.println("phone:"+phone);
-
-					int result=AutoScript.autoRun(phone,verifyCode);
-		            AutoScript.goHome();
-		            verifyMap.put("resultCode", "error");
-		            if(result==1){
-		                verifyMap.put("resultCode", "success");
-		            }else if(result==2){
-		                verifyMap.put("errorMsg","enter add friend view failure");
-		            }else if(result==3){
-		                verifyMap.put("errorMsg","no find add or send button");
-		            }else if(result==4){
-		                verifyMap.put("errorMsg","send msg failure");
-		            }
-		            
-		            try {
-						WebSocketClientImpl wClientImpl=WebSocketClientImpl.getAvailableSocketClient(null);
+					Double userId=(Double) verifyMap.get("userId");
+					Double verifyInfoId=(Double) verifyMap.get("verifyInfoId");
+					verifyMap.put("userId", userId.intValue());
+					verifyMap.put("verifyInfoId", verifyInfoId.intValue());
+					int result = AutoScript.autoRun(phone, verifyCode);
+					AutoScript.goHome();
+					verifyMap.put("resultCode", "error");
+					if (result == 1) {
+						verifyMap.put("resultCode", "success");
+					} else if (result == 2) {
+						verifyMap.put("errorMsg",
+								"enter add friend view failure");
+					} else if (result == 3) {
+						verifyMap.put("errorMsg", "no find add or send button");
+					} else if (result == 4) {
+						verifyMap.put("errorMsg", "send msg failure");
+					}
+					System.out.println("send result:" + result);
+					WebSocketClientImpl wClientImpl = WebSocketClientImpl
+							.getSocketClient();
+					if (wClientImpl.isOpen()) {
+						System.out.println("start send:");
 						wClientImpl.send(GsonUtils.toJson(verifyMap));
-					} catch (URISyntaxException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.out.println("end send:");
 					}
 				} catch (InterruptedException e) {
 
@@ -123,7 +123,7 @@ public class AutoService extends Service {
 	@Override
 	public void onCreate() {
 		mCmd = new RootShellCmd();
-		context=this;
+		context = this;
 	}
 
 	@SuppressLint("NewApi")

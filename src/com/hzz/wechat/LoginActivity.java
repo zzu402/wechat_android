@@ -90,7 +90,6 @@ public class LoginActivity extends Activity {
 		
 		
 		new Thread(new Runnable() {
-			@SuppressWarnings("static-access")
 			@Override
 			public void run() {
 				String uri = String.format("%s/%s",
@@ -100,7 +99,7 @@ public class LoginActivity extends Activity {
 							.getAvailableSocketClient(uri);
 					wSocketClientImpl.setHandler(mHandler);
 					wSocketClientImpl.connect(wSocketClientImpl);
-					wSocketClientImpl.keepClientAlive(wSocketClientImpl);
+	
 					Map<String, Object> verifyMap = new HashMap<String, Object>();
 					verifyMap.put("secretkey", key);
 

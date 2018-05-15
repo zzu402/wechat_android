@@ -107,7 +107,7 @@ public class AutoScript {
         //然后删除
         AdbUtils.del();
         //在搜索栏目上面搜索到对象后 点击
-        AdbUtils.touch(300, 250);
+        AdbUtils.touch(400, 250);
     }
 
     //进入到添加界面
