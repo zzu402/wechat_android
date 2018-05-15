@@ -23,7 +23,11 @@ public class AutoScript {
     }
 
     private static void inputChatContent(String text) {
-        AdbUtils.inputText(text);
+    	for(int i=0;i<text.length();i++){
+    		AdbUtils.inputText(String.valueOf(text.charAt(i)));
+    		SleepUtils.sleep(50L);
+    	}
+        
     }
 
     private static void sendText() {
@@ -93,15 +97,9 @@ public class AutoScript {
     public static void doAddSearchAcion(String wechatId){
         checkHeaderContainText("添加朋友");
         Random random=new Random();
-        AdbUtils.inputText(wechatId);//在输入框输入好友 微信号/手机号/qq
-        //这边输入可能输入不全
-//        AdbUtils.printScreen();
-//        ImageUtils.cron(250,100,500,100, GlobalConstant.SCREENSHOT_LOCATION,GlobalConstant.INPUT_LOCATION);
-//        String inputPhone=OcrUtils.ocr(GlobalConstant.INPUT_LOCATION,model);
-//        if(!inputPhone.contains(wechatId)){
-//            AdbUtils.touch(1040, 120);//输入不全，再次输入
-//            AdbUtils.inputText(wechatId);//再输入一次
-//        }
+//        AdbUtils.inputText(wechatId);//在输入框输入好友 微信号/手机号/qq
+        AdbUtils.inputText(wechatId);
+        SleepUtils.sleep(100L);
         //这边随便输入一位数字
         AdbUtils.inputText(String.valueOf(random.nextInt(9)));
         //然后删除
@@ -193,14 +191,6 @@ public class AutoScript {
             return false;
         clickChatInput();//点击使得可以输入
         inputChatContent(verifyCode);//输入消息
-        AdbUtils.printScreen();
-        ImageUtils.cron(135,1800,500,100, GlobalConstant.SCREENSHOT_LOCATION,GlobalConstant.MESSAGE_LOCATION);
-        String text=OcrUtils.ocr(GlobalConstant.MESSAGE_LOCATION,model);
-        if(!text.contains(verifyCode)){
-            for(int i=0;i<verifyCode.length();i++)
-                AdbUtils.del();
-            inputChatContent(verifyCode);//输入消息
-        }
         sendText();//点击发送
         return true;
     }
