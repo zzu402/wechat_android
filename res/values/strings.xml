@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">wechat</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="info1">使用说明:
+        \n1. 打开/切换到本小工具，点击“开始”；
+        \n2. 切换本小工具到后台，使微信处于前台；
+        \n3. 本工具需要手机root之后才能使用（自动点击屏幕）；
+        \n4. 部分手机可能不兼容。</string>
+    <string name="start">开始</string>
+    <string name="toggle">开启悬浮窗(部分机型支持)</string>
+    <string name="end">结束</string>
+
+</resources>
