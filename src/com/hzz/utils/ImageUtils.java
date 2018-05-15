@@ -124,8 +124,20 @@ public class ImageUtils {
 	}
 
 	public static Bitmap getBitmapFromPath(String path) {
-		String imagePath=String.format("file://%s", path);
-		return ImageLoader.getInstance().loadImageSync(imagePath);
+//		String imagePath=String.format("file://%s", path);
+//		Bitmap bitmap= ImageLoader.getInstance().loadImageSync(imagePath);
+//		while(bitmap==null){
+//			System.out.println("bitmap is null:");
+//			SleepUtils.sleep(100L);
+//			bitmap= ImageLoader.getInstance().loadImageSync(imagePath);
+//		}
+		Bitmap bitmap=null;
+		bitmap=BitmapFactory.decodeFile(path);
+		while(bitmap==null){
+			SleepUtils.sleep(100L);
+			bitmap=BitmapFactory.decodeFile(path);
+		}
+		return bitmap;
 	}
 
 }

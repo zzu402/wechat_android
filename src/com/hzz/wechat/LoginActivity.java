@@ -3,7 +3,10 @@ package com.hzz.wechat;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.hzz.constant.GlobalConstant;
 import com.hzz.utils.GsonUtils;
+import com.hzz.utils.OcrUtils;
 import com.hzz.utils.StringUtil;
 import com.hzz.websocket.WebSocketClientImpl;
 import android.annotation.SuppressLint;
@@ -57,6 +60,15 @@ public class LoginActivity extends Activity {
 		secretKey = (EditText) findViewById(R.id.sercretKey);
 		userName.setText(sp.getString("userName", ""));
 		secretKey.setText(sp.getString("secretKey", ""));
+//		OcrUtils.setContext(this);
+//		new Thread(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				String result=OcrUtils.baiduOcr(GlobalConstant.HOME_LOCATION);
+//				System.out.println("ocr result:"+result);
+//			}
+//		}).start();
 	}
 
 	public void login(View v) {

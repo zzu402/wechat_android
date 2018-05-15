@@ -6,6 +6,7 @@ import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 import com.hzz.utils.GsonUtils;
+import com.hzz.utils.SleepUtils;
 import com.hzz.utils.StringUtil;
 import com.wechat.queue.MqManager;
 
@@ -87,9 +88,10 @@ public class WebSocketClientImpl extends WebSocketClient {
 			@Override
 			public void run() {
 				while (true) {
-					if (client.isClosed()) {
+					if (client.isClosing()) {
 						client.connect();
 					}
+					SleepUtils.sleep(1000L);
 				}
 			}
 		}).start();

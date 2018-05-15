@@ -95,19 +95,19 @@ public class AutoScript {
         Random random=new Random();
         AdbUtils.inputText(wechatId);//在输入框输入好友 微信号/手机号/qq
         //这边输入可能输入不全
-        AdbUtils.printScreen();
-        ImageUtils.cron(250,100,500,100, GlobalConstant.SCREENSHOT_LOCATION,GlobalConstant.INPUT_LOCATION);
-        String inputPhone=OcrUtils.ocr(GlobalConstant.INPUT_LOCATION,model);
-        if(!inputPhone.contains(wechatId)){
-            AdbUtils.touch(1040, 120);//输入不全，再次输入
-            AdbUtils.inputText(wechatId);//再输入一次
-        }
+//        AdbUtils.printScreen();
+//        ImageUtils.cron(250,100,500,100, GlobalConstant.SCREENSHOT_LOCATION,GlobalConstant.INPUT_LOCATION);
+//        String inputPhone=OcrUtils.ocr(GlobalConstant.INPUT_LOCATION,model);
+//        if(!inputPhone.contains(wechatId)){
+//            AdbUtils.touch(1040, 120);//输入不全，再次输入
+//            AdbUtils.inputText(wechatId);//再输入一次
+//        }
         //这边随便输入一位数字
         AdbUtils.inputText(String.valueOf(random.nextInt(9)));
         //然后删除
         AdbUtils.del();
         //在搜索栏目上面搜索到对象后 点击
-        AdbUtils.touch(200, 250);
+        AdbUtils.touch(300, 250);
     }
 
     //进入到添加界面
