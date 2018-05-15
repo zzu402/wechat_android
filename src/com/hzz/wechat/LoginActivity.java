@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import com.hzz.utils.GsonUtils;
+import com.hzz.utils.ImageUtils;
 import com.hzz.utils.LogUtils;
 import com.hzz.utils.StringUtil;
 import com.hzz.websocket.WebSocketClientImpl;
@@ -56,6 +57,7 @@ public class LoginActivity extends Activity {
 		secretKey = (EditText) findViewById(R.id.sercretKey);
 		userName.setText(sp.getString("userName", ""));
 		secretKey.setText(sp.getString("secretKey", ""));
+		ImageUtils.initLoader(mActivity);
 	}
 
 	/*

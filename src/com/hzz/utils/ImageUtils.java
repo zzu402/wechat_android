@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 /**
  * @Author: huangzz
@@ -56,10 +58,10 @@ public class ImageUtils {
 	public static boolean isSimilarity(String sourcePath, String targetPath) {
 		Bitmap bm1 = getBitmapFromPath(sourcePath);
 		Bitmap bm2 = getBitmapFromPath(targetPath);
-		int s=similarity(bm1, bm2);
-		if(s>90)
+		int s = similarity(bm1, bm2);
+		if (s > 90)
 			return true;
-		
+
 		return false;
 	}
 
@@ -104,18 +106,33 @@ public class ImageUtils {
 
 		}
 
-		return t/(t+f);
+		return t / (t + f);
 
 	}
-	
+
+	public static void initLoader(Activity activity) {
+		// 创建默认的ImageLoader配置参数
+		ImageLoaderConfiguration configuration = ImageLoaderConfiguration
+				.createDefault(activity);
+
+		// Initialize ImageLoader with configuration.
+		ImageLoader.getInstance().init(configuration);
+	}
+
 	public static Bitmap getBitmapFromPath(String path) {
-		Bitmap bitmap=null;
-		bitmap=BitmapFactory.decodeFile(path);
-		while(bitmap==null){
-			LogUtils.info(ImageUtils.class, "bitmapFactory decodeFile null");
-			SleepUtils.sleep(100L);
-			bitmap=BitmapFactory.decodeFile(path);
+		Bitmap bitmap = null;
+		// bitmap = BitmapFactory.decodeFile(path);
+		// while (bitmap == null) {
+		// LogUtils.info(ImageUtils.class, "bitmapFactory decodeFile null");
+		// SleepUtils.sleep(100L);
+		// bitmap = BitmapFactory.decodeFile(path);
+		// }
+		String url = String.format("file://%s", path);
+		bitmap = ImageLoader.getInstance().loadImageSync(url);
+		while (bitmap == null) {
+			bitmap = ImageLoader.getInstance().loadImageSync(url);
 		}
+
 		return bitmap;
 	}
 
