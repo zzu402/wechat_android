@@ -4,8 +4,8 @@ import java.util.Map;
 import com.hzz.utils.AdbUtils;
 import com.hzz.utils.AutoScript;
 import com.hzz.utils.GsonUtils;
+import com.hzz.utils.LogUtils;
 import com.hzz.utils.OcrUtils;
-import com.hzz.utils.RootShellCmd;
 import com.hzz.websocket.WebSocketClientImpl;
 import com.wechat.queue.MqManager;
 import android.annotation.SuppressLint;
@@ -14,18 +14,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-
 public class AutoService extends Service {
-
 	public static final String ACTION = "action";
 	public static final String SHOW = "show";
 	public static final String HIDE = "hide";
 	public static final int SHOWINFO = 101;
 
 	private FloatingView mFloatingView;
-
-	private RootShellCmd mCmd;
-	private final String mLogTag = "AutoRun";
 	private Thread mTask;
 	private AutoRunnable mRun;
 	private Context context;
@@ -56,6 +51,7 @@ public class AutoService extends Service {
 			OcrUtils.setContext(context);
 			while (!mStop) {
 				String json;
+				LogUtils.info(getClass(), "Auto service is running...");
 				try {
 					AdbUtils.printScreen();
 					json = MqManager.getMq(String.format("VERIFY_FRIEND"))
@@ -80,17 +76,15 @@ public class AutoService extends Service {
 					} else if (result == 4) {
 						verifyMap.put("errorMsg", "send msg failure");
 					}
-					System.out.println("send result:" + result);
+					LogUtils.info(getClass(), "auto run result is :"+result);
 					WebSocketClientImpl wClientImpl = WebSocketClientImpl
 							.getSocketClient();
 					if (wClientImpl.isOpen()) {
-						System.out.println("start send:");
 						wClientImpl.send(GsonUtils.toJson(verifyMap));
-						System.out.println("end send:");
+						LogUtils.info(getClass(), "auto run result send  success... ");
 					}
 				} catch (InterruptedException e) {
-
-					e.printStackTrace();
+					LogUtils.error(getClass(), "auto run error",e);
 				}
 
 			}
@@ -122,7 +116,6 @@ public class AutoService extends Service {
 
 	@Override
 	public void onCreate() {
-		mCmd = new RootShellCmd();
 		context = this;
 	}
 
@@ -155,8 +148,6 @@ public class AutoService extends Service {
 	@Nullable
 	@Override
 	public IBinder onBind(Intent intent) {
-		mCmd = new RootShellCmd();
-
 		return null;
 	}
 }

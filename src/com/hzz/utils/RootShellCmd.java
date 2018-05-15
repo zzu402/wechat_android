@@ -1,7 +1,4 @@
 package com.hzz.utils;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,14 +8,6 @@ import java.io.OutputStream;
  */
 public class RootShellCmd {
 	private OutputStream suOS;
-
-
-	public Bitmap getBitmapFromPath(String path) {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-		Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-		return bitmap;
-	}
 
 	/**
 	 * 执行shell指令

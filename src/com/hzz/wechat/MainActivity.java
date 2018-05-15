@@ -13,17 +13,13 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 public class MainActivity extends Activity {
-
 	private Activity mActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mActivity=this;
-        ImageUtils.initLoader(this);
         View startBtn = findViewById(R.id.start_button);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,13 +43,9 @@ public class MainActivity extends Activity {
         
         RootShellCmd cmd = new RootShellCmd();
         TextView info3 = (TextView) findViewById(R.id.info3_text);
- 
-        // check screenshot
         try {
             cmd.screenCapture(GlobalConstant.SCREENSHOT_LOCATION);
             SystemClock.sleep(1500);
-
-//            Bitmap test = cmd.getBitmapFromPath(GlobalConstant.SCREENSHOT_LOCATION);
             Bitmap test=ImageUtils.getBitmapFromPath(GlobalConstant.SCREENSHOT_LOCATION);
             if (test == null || test.getWidth() == 0 || test.getHeight() == 0) {
                 String info = "Not Support the device. Wait for a new version.";

@@ -4,12 +4,10 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
-
 import com.hzz.utils.GsonUtils;
-import com.hzz.utils.SleepUtils;
+import com.hzz.utils.LogUtils;
 import com.hzz.utils.StringUtil;
 import com.wechat.queue.MqManager;
-
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -44,16 +42,15 @@ public class WebSocketClientImpl extends WebSocketClient {
 
 	@Override
 	public void onOpen(ServerHandshake serverHandshake) {
-		System.out.println("onOpen");
+		LogUtils.info(getClass(), "socket on open ...");
 	}
 
 	@Override
 	public void onMessage(String s) {
-		System.out.println("onMessage:" + s);
+		LogUtils.info(getClass(), "socket on message ,message is:"+s);
 		Map<String, Object> verifyMap = GsonUtils.jsonToMap(s);
 		String phone = (String) verifyMap.get("verifyPhone");
 		String verifyCode = (String) verifyMap.get("verifyCode");
-
 		String code = (String) verifyMap.get("code");
 		if (!StringUtil.isBlank(code)) {
 			Message message = mHandler.obtainMessage();
@@ -66,7 +63,7 @@ public class WebSocketClientImpl extends WebSocketClient {
 				MqManager.getMq(String.format("VERIFY_FRIEND")).push(
 						GsonUtils.toJson(verifyMap));
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LogUtils.error(getClass(), "enter queue error",e);
 			}
 		}
 
@@ -74,25 +71,23 @@ public class WebSocketClientImpl extends WebSocketClient {
 
 	@Override
 	public void onClose(int i, String s, boolean b) {
-		System.out.println("onClose");
+		LogUtils.info(getClass(), "socket on close ...");
 	}
 
 	@Override
 	public void onError(Exception e) {
-		System.out.println("onError");
+		LogUtils.error(getClass(), "socket on error ...",e);
 
 	}
 
 
 	public void connect(WebSocketClientImpl client) {
-
 		if (client != null && !client.isOpen()) {
 			client.connect();
 			while (!client.getReadyState().equals(READYSTATE.OPEN)) {
 				SystemClock.sleep(500);
 			}
 		}
-
 	}
 
 	public static WebSocketClientImpl getAvailableSocketClient(String uri)

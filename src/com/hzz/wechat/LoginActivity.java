@@ -3,10 +3,8 @@ package com.hzz.wechat;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.hzz.constant.GlobalConstant;
 import com.hzz.utils.GsonUtils;
-import com.hzz.utils.OcrUtils;
+import com.hzz.utils.LogUtils;
 import com.hzz.utils.StringUtil;
 import com.hzz.websocket.WebSocketClientImpl;
 import android.annotation.SuppressLint;
@@ -27,14 +25,13 @@ public class LoginActivity extends Activity {
 	private EditText secretKey;
 	private Activity mActivity;
 	//先定义 
-	SharedPreferences sp;
+	private SharedPreferences sp;
 
 	@SuppressLint("HandlerLeak") private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			String jsonStr = (String) msg.obj;
 			Map<String, Object> verifyMap = GsonUtils.jsonToMap(jsonStr);
-
 			String code = (String) verifyMap.get("code");
 			if (!StringUtil.isBlank(code)) {
 				if (code.equals("success")) {
@@ -44,7 +41,6 @@ public class LoginActivity extends Activity {
 				} else {
 					Toast.makeText(mActivity,(String) verifyMap.get("errorMsg"),
 							Toast.LENGTH_LONG).show();
-					secretKey.setText("");
 				}
 			}
 		}
@@ -60,17 +56,11 @@ public class LoginActivity extends Activity {
 		secretKey = (EditText) findViewById(R.id.sercretKey);
 		userName.setText(sp.getString("userName", ""));
 		secretKey.setText(sp.getString("secretKey", ""));
-//		OcrUtils.setContext(this);
-//		new Thread(new Runnable() {
-//			
-//			@Override
-//			public void run() {
-//				String result=OcrUtils.baiduOcr(GlobalConstant.HOME_LOCATION);
-//				System.out.println("ocr result:"+result);
-//			}
-//		}).start();
 	}
 
+	/*
+	 * 点击登陆按钮
+	 */
 	public void login(View v) {
 		final String name = userName.getText().toString().trim();
 		final String key = secretKey.getText().toString().trim();
@@ -82,13 +72,13 @@ public class LoginActivity extends Activity {
 			Toast.makeText(this, "请输入密钥", Toast.LENGTH_SHORT).show();
 			return;
 		}
+		/*
+		 保存登陆信息
+		 */
 		Editor editor=sp.edit();
 		editor.putString("userName", name);
 		editor.putString("secretKey", key);
 		editor.commit();
-		
-		
-		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -99,14 +89,11 @@ public class LoginActivity extends Activity {
 							.getAvailableSocketClient(uri);
 					wSocketClientImpl.setHandler(mHandler);
 					wSocketClientImpl.connect(wSocketClientImpl);
-	
 					Map<String, Object> verifyMap = new HashMap<String, Object>();
 					verifyMap.put("secretkey", key);
-
 					wSocketClientImpl.send(GsonUtils.toJson(verifyMap));
-
 				} catch (URISyntaxException e) {
-					e.printStackTrace();
+					LogUtils.error(getClass(), "登陆失败", e);
 				}
 
 			}

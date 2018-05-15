@@ -4,11 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -113,27 +108,11 @@ public class ImageUtils {
 
 	}
 	
-	
-	public static void initLoader(Activity activity){
-		//创建默认的ImageLoader配置参数  
-        ImageLoaderConfiguration configuration = ImageLoaderConfiguration  
-                .createDefault(activity);  
-          
-        //Initialize ImageLoader with configuration.  
-        ImageLoader.getInstance().init(configuration);
-	}
-
 	public static Bitmap getBitmapFromPath(String path) {
-//		String imagePath=String.format("file://%s", path);
-//		Bitmap bitmap= ImageLoader.getInstance().loadImageSync(imagePath);
-//		while(bitmap==null){
-//			System.out.println("bitmap is null:");
-//			SleepUtils.sleep(100L);
-//			bitmap= ImageLoader.getInstance().loadImageSync(imagePath);
-//		}
 		Bitmap bitmap=null;
 		bitmap=BitmapFactory.decodeFile(path);
 		while(bitmap==null){
+			LogUtils.info(ImageUtils.class, "bitmapFactory decodeFile null");
 			SleepUtils.sleep(100L);
 			bitmap=BitmapFactory.decodeFile(path);
 		}

@@ -49,9 +49,10 @@ public class OcrUtils {
 													.push(GsonUtils.toJson(result
 															.getJsonRes()));
 										} catch (InterruptedException e) {
-											e.printStackTrace();
+											LogUtils.error(OcrUtils.class,
+													"enter queue error", e);
 										}
-									
+
 									}
 
 									@Override
@@ -63,17 +64,16 @@ public class OcrUtils {
 													.push(GsonUtils.toJson(ocrError
 															.getMessage()));
 										} catch (InterruptedException e) {
-											e.printStackTrace();
+											LogUtils.error(OcrUtils.class,
+													"enter queue error", e);
 										}
 									}
 								});
-
 					}
 
 					@Override
 					public void onError(OCRError error) {
-						System.out.println("init ocr error,result :"
-								+ error.getMessage());
+						LogUtils.error(OcrUtils.class, "init ocr error", error);
 					}
 				}, mContext, AK, SK);
 
@@ -83,7 +83,6 @@ public class OcrUtils {
 		} catch (InterruptedException e) {
 			return "";
 		}
-
 		return json;
 	}
 
