@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class LogUtils {
 
-	private static boolean debugger = true;
+	public static boolean debugger = true;
 
 	@SuppressWarnings("rawtypes")
 	public static void info(Class clazz, String message) {

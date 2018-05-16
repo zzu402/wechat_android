@@ -4,7 +4,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import com.hzz.utils.GsonUtils;
-import com.hzz.utils.ImageUtils;
 import com.hzz.utils.LogUtils;
 import com.hzz.utils.OcrUtils;
 import com.hzz.utils.StringUtil;
@@ -28,7 +27,6 @@ public class LoginActivity extends Activity {
 	private Activity mActivity;
 	// 先定义
 	private SharedPreferences sp;
-
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		@Override
@@ -40,8 +38,17 @@ public class LoginActivity extends Activity {
 			String code = (String) verifyMap.get("code");
 			if (!StringUtil.isBlank(code)) {
 				if (code.equals("success")) {
-					if(StringUtil.isBlank(apiKey)||StringUtil.isBlank(secretKey)){
-						Toast.makeText(mActivity, "请到后台设置百度文字识别ApiKey和SercretKey", Toast.LENGTH_LONG).show();
+					if (LogUtils.debugger) {
+						Intent intent = new Intent(mActivity,
+								MainActivity.class);
+						startActivity(intent);
+						finish();
+					}
+					if (StringUtil.isBlank(apiKey)
+							|| StringUtil.isBlank(secretKey)) {
+						Toast.makeText(mActivity,
+								"请到后台设置百度文字识别ApiKey和SercretKey",
+								Toast.LENGTH_LONG).show();
 						return;
 					}
 					OcrUtils.setAK(apiKey);
@@ -68,7 +75,7 @@ public class LoginActivity extends Activity {
 		secretKey = (EditText) findViewById(R.id.sercretKey);
 		userName.setText(sp.getString("userName", ""));
 		secretKey.setText(sp.getString("secretKey", ""));
-		ImageUtils.initLoader(mActivity);
+		// ImageUtils.initLoader(mActivity);
 	}
 
 	/*

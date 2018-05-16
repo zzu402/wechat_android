@@ -37,6 +37,9 @@ public class AutoScript {
         AdbUtils.printScreen();
         ImageUtils.cron(100, 100, 400, 80, GlobalConstant.SCREENSHOT_LOCATION, GlobalConstant.VERIFY_LOCATION);
         String text=OcrUtils.ocr(GlobalConstant.VERIFY_LOCATION,model);
+        if(!OcrUtils.checkOcrResult(text, model)){
+        	return false;
+        }
         int times=0;
         while(!text.contains(str)){
             times++;
@@ -47,6 +50,9 @@ public class AutoScript {
             AdbUtils.printScreen();
             ImageUtils.cron(100, 100, 400, 80, GlobalConstant.SCREENSHOT_LOCATION, GlobalConstant.VERIFY_LOCATION);
             text=OcrUtils.ocr(GlobalConstant.VERIFY_LOCATION,model);
+            if(!OcrUtils.checkOcrResult(text, model)){
+            	return false;
+            }
         }
         return true;
     }
@@ -68,17 +74,28 @@ public class AutoScript {
         }
         return false;
     }
-
-    public static void goHome() {//返回微信主页面
+    
+    
+    /*
+     * 如果ocr识别出错，运行识别，返回false（百度ocr次数到期）
+     */
+    public static boolean goHome() {//返回微信主页面
         AdbUtils.printScreen();
         ImageUtils.cron(20, 100, 400, 80, GlobalConstant.SCREENSHOT_LOCATION, GlobalConstant.HOME_LOCATION);
         String text= OcrUtils.ocr(GlobalConstant.HOME_LOCATION,model);
+        if(!OcrUtils.checkOcrResult(text, model)){//判断ocr识别结果
+        	return false;
+        }
         while (!text.contains("微信")) {//
             AdbUtils.touch(50,130);
             AdbUtils.printScreen();
             ImageUtils.cron(20, 100, 400, 80, GlobalConstant.SCREENSHOT_LOCATION, GlobalConstant.HOME_LOCATION);
             text= OcrUtils.ocr(GlobalConstant.HOME_LOCATION,model);
+            if(!OcrUtils.checkOcrResult(text, model)){
+            	return false;
+            }
         }
+        return true;
     }
 
 
@@ -227,12 +244,14 @@ public class AutoScript {
         return true;
     }
 
-    //1-成功 2-表示进入到添加界失败 3-没有找到添加或发送消息按钮,4-发送失败
+    //1-成功 2-表示进入到添加界失败 3-没有找到添加或发送消息按钮,4-发送失败 5-ocr识别出错了
     public static int autoRun(String wechatId,String verifyCode){
         //1-先返回到微信主页面
-        goHome();
+        if(!goHome())
+        	return 5;
         //2-进入微信添加好友界面
-        enterAddSearchView();
+        if(!enterAddSearchView())
+        	return 5;
         //3-搜索微信号
         doAddSearchAcion(wechatId);
         //4-进入到添加界面

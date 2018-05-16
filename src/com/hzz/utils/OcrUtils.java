@@ -17,8 +17,8 @@ import android.widget.Toast;
 @SuppressLint("NewApi")
 public class OcrUtils {
 
-	private static  String AK = "";
-	private static  String SK = "";
+	private static  String AK = "dG3dFA4Gw5yEG5DXngG2xFxt";
+	private static  String SK = "l65P32d4zybHigZVDAFbLpaHYY7w3qY6";
 	private static Context mContext = null;
 
 
@@ -95,6 +95,13 @@ public class OcrUtils {
 			return "";
 		}
 		return json;
+	}
+	
+	public static boolean checkOcrResult(String text,int model){
+		if(text.contains("words_result")){
+			return true;
+		}
+		return false;
 	}
 
 }

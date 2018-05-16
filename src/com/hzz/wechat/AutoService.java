@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 public class AutoService extends Service {
 	public static final String ACTION = "action";
 	public static final String SHOW = "show";
@@ -63,6 +64,7 @@ public class AutoService extends Service {
 					Double verifyInfoId=(Double) verifyMap.get("verifyInfoId");
 					verifyMap.put("userId", userId.intValue());
 					verifyMap.put("verifyInfoId", verifyInfoId.intValue());
+					Toast.makeText(context, "接收到："+phone+" 的验证请求，准备执行验证脚本。", Toast.LENGTH_LONG).show();
 					int result = AutoScript.autoRun(phone, verifyCode);
 					AutoScript.goHome();
 					verifyMap.put("resultCode", "error");
@@ -75,6 +77,8 @@ public class AutoService extends Service {
 						verifyMap.put("errorMsg", "no find add or send button");
 					} else if (result == 4) {
 						verifyMap.put("errorMsg", "send msg failure");
+					}else if(result==5){
+						verifyMap.put("errorMsg", "ocr error");
 					}
 					LogUtils.info(getClass(), "auto run result is :"+result);
 					WebSocketClientImpl wClientImpl = WebSocketClientImpl
