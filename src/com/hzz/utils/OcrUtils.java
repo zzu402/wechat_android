@@ -47,7 +47,7 @@ public class OcrUtils {
 						OCR.getInstance().initWithToken(mContext, result);
 						GeneralParams param = new GeneralParams();
 						param.setImageFile(new File(imagePath));
-						OCR.getInstance().recognizeGeneral(param,
+						OCR.getInstance().recognizeGeneralBasic(param,
 								new OnResultListener<GeneralResult>() {
 									@Override
 									public void onResult(GeneralResult result) {
