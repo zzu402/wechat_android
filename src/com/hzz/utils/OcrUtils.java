@@ -12,12 +12,11 @@ import com.wechat.queue.MqManager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.widget.Toast;
 
 @SuppressLint("NewApi")
 public class OcrUtils {
 
-	private static  String AK = "dG3dFA4Gw5yEG5DXngG2xFxt";
+	private static   String AK = "dG3dFA4Gw5yEG5DXngG2xFxt";
 	private static  String SK = "l65P32d4zybHigZVDAFbLpaHYY7w3qY6";
 	private static Context mContext = null;
 
@@ -84,7 +83,6 @@ public class OcrUtils {
 					@Override
 					public void onError(OCRError error) {
 						LogUtils.error(OcrUtils.class, "init ocr error", error);
-						Toast.makeText(mContext, "Ocr识别初始化失败，请确保正确的AK和SK", Toast.LENGTH_LONG).show();
 					}
 				}, mContext, AK, SK);
 

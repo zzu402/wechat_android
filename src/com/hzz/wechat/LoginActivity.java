@@ -43,6 +43,7 @@ public class LoginActivity extends Activity {
 								MainActivity.class);
 						startActivity(intent);
 						finish();
+						return ;
 					}
 					if (StringUtil.isBlank(apiKey)
 							|| StringUtil.isBlank(secretKey)) {
