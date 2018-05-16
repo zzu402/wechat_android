@@ -6,6 +6,7 @@ import java.util.Map;
 import com.hzz.utils.GsonUtils;
 import com.hzz.utils.ImageUtils;
 import com.hzz.utils.LogUtils;
+import com.hzz.utils.OcrUtils;
 import com.hzz.utils.StringUtil;
 import com.hzz.websocket.WebSocketClientImpl;
 import android.annotation.SuppressLint;
@@ -25,22 +26,32 @@ public class LoginActivity extends Activity {
 	private EditText userName;
 	private EditText secretKey;
 	private Activity mActivity;
-	//先定义 
+	// 先定义
 	private SharedPreferences sp;
 
-	@SuppressLint("HandlerLeak") private Handler mHandler = new Handler() {
+	@SuppressLint("HandlerLeak")
+	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			String jsonStr = (String) msg.obj;
 			Map<String, Object> verifyMap = GsonUtils.jsonToMap(jsonStr);
+			String apiKey = (String) verifyMap.get("baiduApiKey");
+			String secretKey = (String) verifyMap.get("baiduApiSecretKey");
 			String code = (String) verifyMap.get("code");
 			if (!StringUtil.isBlank(code)) {
 				if (code.equals("success")) {
-					Intent intent=new Intent(mActivity, MainActivity.class);
+					if(StringUtil.isBlank(apiKey)||StringUtil.isBlank(secretKey)){
+						Toast.makeText(mActivity, "请到后台设置百度文字识别ApiKey和SercretKey", Toast.LENGTH_LONG).show();
+						return;
+					}
+					OcrUtils.setAK(apiKey);
+					OcrUtils.setSK(secretKey);
+					Intent intent = new Intent(mActivity, MainActivity.class);
 					startActivity(intent);
 					finish();
 				} else {
-					Toast.makeText(mActivity,(String) verifyMap.get("errorMsg"),
+					Toast.makeText(mActivity,
+							(String) verifyMap.get("errorMsg"),
 							Toast.LENGTH_LONG).show();
 				}
 			}
@@ -50,8 +61,8 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mActivity=this;
-		sp=  getSharedPreferences("userInfo", Context.MODE_PRIVATE);
+		mActivity = this;
+		sp = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
 		setContentView(R.layout.activity_login);
 		userName = (EditText) findViewById(R.id.userName);
 		secretKey = (EditText) findViewById(R.id.sercretKey);
@@ -75,9 +86,9 @@ public class LoginActivity extends Activity {
 			return;
 		}
 		/*
-		 保存登陆信息
+		 * 保存登陆信息
 		 */
-		Editor editor=sp.edit();
+		Editor editor = sp.edit();
 		editor.putString("userName", name);
 		editor.putString("secretKey", key);
 		editor.commit();

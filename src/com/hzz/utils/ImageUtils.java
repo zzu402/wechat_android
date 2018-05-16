@@ -8,6 +8,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 /**
  * @Author: huangzz
@@ -38,9 +39,6 @@ public class ImageUtils {
 		Bitmap desc = Bitmap.createBitmap(bitmap, x1, y1, width, height);
 
 		File f = new File(descpath);
-		if (f.exists()) {
-			f.delete();
-		}
 		try {
 			FileOutputStream out = new FileOutputStream(f);
 			desc.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -121,17 +119,17 @@ public class ImageUtils {
 
 	public static Bitmap getBitmapFromPath(String path) {
 		Bitmap bitmap = null;
-		// bitmap = BitmapFactory.decodeFile(path);
-		// while (bitmap == null) {
-		// LogUtils.info(ImageUtils.class, "bitmapFactory decodeFile null");
-		// SleepUtils.sleep(100L);
-		// bitmap = BitmapFactory.decodeFile(path);
-		// }
-		String url = String.format("file://%s", path);
-		bitmap = ImageLoader.getInstance().loadImageSync(url);
+		bitmap = BitmapFactory.decodeFile(path);
 		while (bitmap == null) {
-			bitmap = ImageLoader.getInstance().loadImageSync(url);
+			LogUtils.info(ImageUtils.class, "bitmapFactory decodeFile null");
+			SleepUtils.sleep(100L);
+			bitmap = BitmapFactory.decodeFile(path);
 		}
+		// String url = String.format("file://%s", path);
+		// bitmap = ImageLoader.getInstance().loadImageSync(url);
+		// while (bitmap == null) {
+		// bitmap = ImageLoader.getInstance().loadImageSync(url);
+		// }
 
 		return bitmap;
 	}
